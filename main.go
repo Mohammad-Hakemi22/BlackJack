@@ -24,6 +24,34 @@ func draw(cards []deck.Card) (deck.Card, []deck.Card) {
 	return cards[0], cards[1:]
 }
 
+func (h Hand) Score() int {
+	minscore := h.MinScore()
+	if minscore > 11 {
+		return minscore
+	}
+	for _, card := range h {
+		if card.Rank == deck.Ace {
+			return minscore + 10 //for change value of Ace from 1 to 11; already Ace = 1 => 1+ 10 = 11
+		}
+	}
+	return minscore
+}
+
+func (h Hand) MinScore() int {
+	score := 0
+	for _, card := range h {
+		score += min(int(card.Rank), 10)
+	}
+	return score
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 func main() {
 	cards := deck.New(deck.Deck(3), deck.Shuffle)
 	var card deck.Card
@@ -37,7 +65,7 @@ func main() {
 	var input string
 
 	for input != "s" {
-		fmt.Println("player: ", player)
+		fmt.Println("player:", player)
 		fmt.Println("dealer: ", dealer.DealerString())
 		fmt.Println("Whar will you do? (h)it , (s)tand")
 		fmt.Scanf("%s\n", &input)
@@ -48,6 +76,6 @@ func main() {
 		}
 	}
 	fmt.Println("Final Hand")
-	fmt.Println("player: ", player)
-	fmt.Println("dealer: ", dealer)
+	fmt.Println("player: ", player, "\tScore: ", player.Score())
+	fmt.Println("dealer: ", dealer, "\tScore: ", dealer.Score())
 }

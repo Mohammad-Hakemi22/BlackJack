@@ -75,7 +75,25 @@ func main() {
 			player = append(player, card)
 		}
 	}
+
+	for dealer.Score() <= 16 || (dealer.Score() == 17 && dealer.MinScore() != 17) {
+		card, cards = draw(cards)
+		dealer = append(dealer, card)
+	}
+	pScore, dScore := player.Score(), dealer.Score()
 	fmt.Println("Final Hand")
-	fmt.Println("player: ", player, "\tScore: ", player.Score())
-	fmt.Println("dealer: ", dealer, "\tScore: ", dealer.Score())
+	fmt.Println("player: ", player, "\tScore: ", pScore)
+	fmt.Println("dealer: ", dealer, "\tScore: ", dScore)
+	switch {
+	case pScore > 21:
+		fmt.Println("You busted")
+	case dScore > 21:
+		fmt.Println("You Win")
+	case pScore > dScore:
+		fmt.Println("You Win")
+	case pScore < dScore:
+		fmt.Println("You Lose")
+	case pScore == dScore:
+		fmt.Println("Draw")
+	}
 }
